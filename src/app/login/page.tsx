@@ -1,15 +1,16 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 function LoginPage() {
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         const result = await signIn("credentials", {
             email,
             password,
@@ -17,7 +18,7 @@ function LoginPage() {
         });
 
         if (result?.error) {
-            alert("Login failed: " + result.error);
+            console.log(result.error);
         } else {
             router.push("/");
         }
@@ -27,35 +28,22 @@ function LoginPage() {
         <div>
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
                 <button type="submit">Login</button>
             </form>
-        
-        <div>
-            <p>"Dont have an account"</p>
-            <button onClick={() => router.push("/register")}>Register</button>
-        </div>
+            <div>
+                Don't have an account ?
+                <button onClick={() => router.push("/register")}>Register</button>
+            </div>
         </div>
     );
 }
